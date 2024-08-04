@@ -10,6 +10,8 @@ readme = "README.md"
 python = "^3.11"
 aiogram = "^3.10.0"
 python-dotenv = "^1.0.1"
+pymongo = "^4.8.0"
+mongoengine = "^0.28.2"
 
 
 [build-system]
