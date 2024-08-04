@@ -1,6 +1,7 @@
 """connect"""
 from mongoengine import connect
 from bot_init import config
+import certifi
 
 
 mongo_user = config.get('user')
@@ -10,4 +11,5 @@ domain = config.get('domain')
 
 # connect to cluster on AtlasDB with connection string
 
-connect(host=f"""mongodb+srv://{mongo_user}:{mongodb_pass}@{domain}/{db_name}?retryWrites=true&w=majority""", ssl=True)
+connect(host=f"""mongodb+srv://{mongo_user}:{mongodb_pass}@{domain}/{db_name}?retryWrites=true&w=majority""",
+        tlsCAFile=certifi.where())

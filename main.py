@@ -6,6 +6,7 @@ from aiogram import html
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from bot_init import dp, bot, config
+from crud import create_user
 
 
 @dp.message(CommandStart())
@@ -18,8 +19,9 @@ async def command_start_handler(message: Message) -> None:
     # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    print(message)
     await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
+    create_user(first_name=message.from_user.first_name, last_name=message.from_user.last_name,
+                tg_id=message.from_user.id, lang=message.from_user.language_code)
 
 
 @dp.message()
@@ -29,7 +31,7 @@ async def echo_handler(message: Message) -> None:
 
     By default, message handler will handle all message types (like a text, photo, sticker etc.)
     """
-    try:from aiogram import 
+    try:
         # Send a copy of the received message
         await message.send_copy(chat_id=message.chat.id)
     except TypeError:
