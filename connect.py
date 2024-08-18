@@ -1,7 +1,7 @@
 """connect"""
 from mongoengine import connect
-from bot_init import config
 import certifi
+from bot_init import config
 
 
 mongo_user = config.get('user')

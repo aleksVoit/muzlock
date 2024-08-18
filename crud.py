@@ -1,4 +1,5 @@
 from models import Users
+# pylint: disable=no-member
 
 
 def change_status(tg_id: int, status: bool) -> None:
@@ -34,10 +35,3 @@ def create_user(first_name, last_name, tg_id, lang):
 def get_all_users() -> list[Users]:
     users = Users.objects(is_active=True).all()
     return users
-
-
-
-
-
-
-

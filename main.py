@@ -5,10 +5,10 @@ import sys
 from aiogram import html, F, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-from bot_init import dp, bot, config
+from bot_init import dp, bot  # , config
 from crud import create_user
 from keyboards import get_categories_kb, get_subcategory_kb
-from parser import get_subcategories
+from muz_parser import get_subcategories
 
 
 @dp.message(CommandStart())
@@ -26,8 +26,8 @@ async def command_start_handler(message: Message) -> None:
         f"Hello, {html.bold(message.from_user.full_name)}!",
         reply_markup=keyboard
     )
-    # create_user(first_name=message.from_user.first_name, last_name=message.from_user.last_name,
-    #             tg_id=message.from_user.id, lang=message.from_user.language_code)
+    create_user(first_name=message.from_user.first_name, last_name=message.from_user.last_name,
+                tg_id=message.from_user.id, lang=message.from_user.language_code)
 
 
 @dp.callback_query(F.data.startswith('cat'))

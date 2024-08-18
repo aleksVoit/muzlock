@@ -1,14 +1,14 @@
+import re
 import bs4
 import requests
-import lxml
-import re
+# import lxml
 
 BASE_URL = 'https://www.lastminutemusicians.com'
 YOUTUBE_URL = 'https://www.youtube.com/watch?v='
 
 
 def get_subcategories(category: str) -> list[dict]:
-    response = requests.get(BASE_URL + category)
+    response = requests.get(BASE_URL + category, timeout=10)
     sub_categories = list()
     print(response.status_code)
     html = response.text
@@ -28,7 +28,7 @@ def get_subcategories(category: str) -> list[dict]:
 
 def get_musicians(sub_cat_link: str) -> list[dict]:
     full_info = list()
-    response = requests.get(sub_cat_link)
+    response = requests.get(sub_cat_link, timeout=10)
     print(response.status_code)
     html = response.text
     soup = bs4.BeautifulSoup(html, 'lxml')
@@ -76,13 +76,22 @@ def get_musicians(sub_cat_link: str) -> list[dict]:
         print(musician_title)
         print(musician_link)
         print(musician_description)
-        full_info.append({'title': musician_title, 'description': musician_description, 'location': location,
-                          'price': price, 'link': musician_link, 'media_type': media_type, 'media_link': media_link})
+        full_info.append(
+            {
+                'title': musician_title,
+                'description': musician_description,
+                'location': location,
+                'price': price,
+                'link': musician_link,
+                'media_type': media_type,
+                'media_link': media_link
+            }
+        )
     return full_info
 
 
 if __name__ == '__main__':
-    # get_subcategories('/bands.html')
-    # get_subcategories('/musicians.html')
-    # get_subcategories('/entertainment-services.html')
-    get_musicians('https://www.lastminutemusicians.com/search/sound_engineers.html')
+    get_subcategories('/bands.html')
+    get_subcategories('/musicians.html')
+    get_subcategories('/entertainment-services.html')
+    # get_musicians('https://www.lastminutemusicians.com/search/sound_engineers.html')

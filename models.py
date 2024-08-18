@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from mongoengine import EmbeddedDocument, Document
-from mongoengine.fields import BooleanField, DateTimeField, EmbeddedDocumentField, ListField, StringField, IntField
-from connect import connect
+from mongoengine import Document
+from mongoengine.fields import BooleanField, DateTimeField, StringField, IntField
+# from connect import connect
 
 
 
