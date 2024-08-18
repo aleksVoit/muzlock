@@ -2,11 +2,13 @@
 import asyncio
 import logging
 import sys
-from aiogram import html
+from aiogram import html, F, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from bot_init import dp, bot, config
 from crud import create_user
+from keyboards import get_categories_kb, get_subcategory_kb
+from parser import get_subcategories
 
 
 @dp.message(CommandStart())
@@ -19,9 +21,34 @@ async def command_start_handler(message: Message) -> None:
     # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    await message.answer(f"Hello, {html.bold(message.from_user.full_name)}!")
-    create_user(first_name=message.from_user.first_name, last_name=message.from_user.last_name,
-                tg_id=message.from_user.id, lang=message.from_user.language_code)
+    keyboard = await get_categories_kb()
+    await message.answer(
+        f"Hello, {html.bold(message.from_user.full_name)}!",
+        reply_markup=keyboard
+    )
+    # create_user(first_name=message.from_user.first_name, last_name=message.from_user.last_name,
+    #             tg_id=message.from_user.id, lang=message.from_user.language_code)
+
+
+@dp.callback_query(F.data.startswith('cat'))
+async def category_handler(callback: types.CallbackQuery):
+    data = callback.data
+    command = data.split(':')[1]
+    match command:
+        case 'bands':
+            subcats = get_subcategories('/bands.html')
+        case 'musicians':
+            subcats = get_subcategories('/musicians.html')
+        case 'services':
+            subcats = get_subcategories('/entertainment-services.html')
+    for subs in subcats:
+        await bot.send_photo(
+            chat_id=callback.from_user.id,
+            photo=subs.get('image_bg'),
+            caption=f"{subs.get('title')}\n{subs.get('members')}",
+            reply_markup=await get_subcategory_kb(subs.get('link'))
+        )
+
 
 
 @dp.message()
@@ -47,5 +74,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(level=logging.ERROR, stream=sys.stdout)
     asyncio.run(main())
