@@ -12,9 +12,17 @@ async def get_categories_kb():
 async def get_subcategory_kb(link: str):
     b_data = f'sub:{link}'
     if len(b_data) > 64:
-        raise ValueError("Callback data is too long")
+        raise ValueError("subcategory-kb:Callback data is too long")
     button = [
-        [InlineKeyboardButton(text='Choose', callback_data=b_data)]
+        [InlineKeyboardButton(text='Choose', callback_data=b_data)],
+        [InlineKeyboardButton(text='Go back', callback_data='back')]
+    ]
+    kb = InlineKeyboardMarkup(inline_keyboard=button)
+    return kb
+
+async def get_musician_kb():
+    button = [
+        [InlineKeyboardButton(text='Go back', callback_data='back')]
     ]
     kb = InlineKeyboardMarkup(inline_keyboard=button)
     return kb
