@@ -22,10 +22,10 @@ def create_user(first_name, last_name, tg_id, lang):
         change_status(tg_id, True)
         return
     new_user = Users(
-        first_name = first_name,
-        last_name = last_name,
-        tg_id = tg_id,
-        language = lang
+        first_name=first_name,
+        last_name=last_name,
+        tg_id=tg_id,
+        language=lang
     )
     new_user.save()
     print('New user added.')
