@@ -34,6 +34,7 @@ def file_post_bind(user_id, created_at, conn):
     print(result)
     return result
 
+
 def save_post_to_db():
     post = generate_post()
     file = generate_file(user_id=post[0], created_at=post[1])
@@ -63,4 +64,3 @@ def save_post_to_db():
 
 if __name__ == "__main__":
     save_post_to_db()
-

@@ -55,6 +55,7 @@ async def separator(callback: types.CallbackQuery):
         parse_mode="Markdown"
     )
 
+
 @dp.callback_query(F.data.startswith('cat'))
 async def category_handler(callback: types.CallbackQuery):
     """_summary_

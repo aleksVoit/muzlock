@@ -3,13 +3,13 @@ import re
 import logging
 import bs4
 import requests
+
 # import lxml
 
 BASE_URL = 'https://www.lastminutemusicians.com'
 YOUTUBE_URL = 'https://www.youtube.com/watch?v='
 
 logging.basicConfig(level=logging.ERROR, stream=sys.stdout)
-
 
 
 def get_subcategories(category: str) -> list[dict]:

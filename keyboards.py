@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+
 async def get_categories_kb():
     buttons = [
         [InlineKeyboardButton(text='Bands', callback_data='cat:bands')],
@@ -8,6 +9,7 @@ async def get_categories_kb():
     ]
     kb = InlineKeyboardMarkup(inline_keyboard=buttons)
     return kb
+
 
 async def get_subcategory_kb(link: str):
     b_data = f'sub:{link}'
@@ -19,6 +21,7 @@ async def get_subcategory_kb(link: str):
     ]
     kb = InlineKeyboardMarkup(inline_keyboard=button)
     return kb
+
 
 async def get_musician_kb():
     button = [
