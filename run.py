@@ -1,8 +1,10 @@
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from bot_init import TOKEN, types, config
+
 import uvicorn
+from fastapi import FastAPI
+from bot_init import TOKEN, types, config
 from main import bot, dp
+from paypal_handler import paypal_router
 
 
 @asynccontextmanager
@@ -22,6 +24,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(paypal_router)
 
 
 @app.post(f'/bot/{TOKEN}')
@@ -31,4 +34,3 @@ async def webhook(update: dict) -> None:
 
 if __name__ == '__main__':
     uvicorn.run('run:app', host='127.0.0.1', port=8000, reload=True)
-

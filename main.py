@@ -7,8 +7,9 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from bot_init import dp, bot  # , config
 from crud import create_user
-from keyboards import get_categories_kb, get_subcategory_kb, get_musician_kb
+from keyboards import get_categories_kb, get_subcategory_kb, get_musician_kb, get_payment_kb
 from muz_parser import get_subcategories, get_musicians
+from paypal_handler import create_paypal_payment
 
 
 BASE_URL = 'https://www.lastminutemusicians.com'
@@ -104,7 +105,7 @@ async def subcategory_handler(callback: types.CallbackQuery):
                         f"Located at: {muz.get('location')}\n"
                         f"Average price: {muz.get('price')}\n\n"
                         f"Link to site: {muz.get('link')}",
-                    reply_markup=await get_musician_kb()
+                    reply_markup=await get_musician_kb(muz.get('price'), muz.get('title'))
                 )
             case 'video':
                 link = YOUTUBE_URL + muz.get('media_link')
@@ -118,7 +119,7 @@ async def subcategory_handler(callback: types.CallbackQuery):
                         f"Link to site: {muz.get('link')}\n\n"
                         f"🎥 [Watch Video]({link})",
                     parse_mode="Markdown",
-                    reply_markup=await get_musician_kb()
+                    reply_markup=await get_musician_kb(muz.get('price'), muz.get('title'))
                 )
             case 'audio':
                 await bot.send_audio(
@@ -129,9 +130,22 @@ async def subcategory_handler(callback: types.CallbackQuery):
                         f"Located at: {muz.get('location')}\n"
                         f"Average price: {muz.get('price')}\n\n"
                         f"Link to site: {muz.get('link')}",
-                    reply_markup=await get_musician_kb()
+                    reply_markup=await get_musician_kb(muz.get('price'), muz.get('title'))
                 )
 
+@dp.callback_query(F.data.startswith('pay'))
+async def create_payment(callback: types.CallbackQuery):
+    payload = callback.data
+    print(payload)
+    prefix, price, title = payload.split(':')
+    response = await create_paypal_payment(price, "GBP", title, callback.from_user.id)
+    target_link = list(filter(lambda x: x.get('rel') == 'approval_url', response.get('links')))[0].get('href')
+    print(target_link)
+    await bot.send_message(
+        chat_id=callback.from_user.id,
+        text=f"Pay for {title}",
+        reply_markup=await get_payment_kb(target_link)
+    )
 
 @dp.message()
 async def echo_handler(message: Message) -> None:

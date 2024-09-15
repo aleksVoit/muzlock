@@ -23,8 +23,21 @@ async def get_subcategory_kb(link: str):
     return kb
 
 
-async def get_musician_kb():
+async def get_musician_kb(price: str, title):
+    price = price.replace('£', "")
+    b_data = f"pay:{price}:{title}"
+    if len(b_data) > 64:
+        b_data = b_data[0:64]
     button = [
+        [InlineKeyboardButton(text='Order artist', callback_data=b_data)],
+        [InlineKeyboardButton(text='Go back', callback_data='back')]
+    ]
+    kb = InlineKeyboardMarkup(inline_keyboard=button)
+    return kb
+
+async def get_payment_kb(url: str):
+    button = [
+        [InlineKeyboardButton(text='PayPal', url=url)],
         [InlineKeyboardButton(text='Go back', callback_data='back')]
     ]
     kb = InlineKeyboardMarkup(inline_keyboard=button)
